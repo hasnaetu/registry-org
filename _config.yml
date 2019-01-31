@@ -1,10 +1,10 @@
 
-title:        Static Registry
+title:        Static Organization Registry
 
 # Urls
-baseurl:      "/registry"
-repository:   "singularityhub/registry"
-repo:         "https://www.github.com/singularityhub/registry"
+baseurl:      "/registry-org"
+repository:   "singularityhub/registry-org"
+repo:         "https://www.github.com/singularityhub/registry-org"
 
 # People and Social
 maintainer: "@vsoch"
