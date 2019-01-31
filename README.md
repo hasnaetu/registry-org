@@ -34,6 +34,11 @@ Following the links below to read the documentation on the repository wiki to le
 
  - [Documentation](https://github.com/singularityhub/registry/wiki) home on the respository wiki.
 
+Basically, the registry here only accepts pull request for new folder hierarchies ( container
+namespaces) with metadata files. The repositories creating the pull requests should
+use the [templates provided](_templates) to generate the additional files. Once this is 
+developed, there should be template repos that will allow you to easily do this.
+
 ## Support
 
 Please [open an issue](https://www.github.com/singularityhub/registry-org/) if you
