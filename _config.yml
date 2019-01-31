@@ -31,3 +31,5 @@ defaults:
 
 #Others
 markdown: kramdown
+
+exclude: [_templates]
