@@ -4,9 +4,15 @@ layout: home
 
 # A Static Container Registry
 
-Welcome to registry, a static container registry! Here I am exploring
-how we can generate a static registry for some kind of container (a binary or set of layers) 
-using Github Pages and some storage.
+**under development**
+
+Welcome to registry-org, a static container registry intended for
+a GitHub organization! Here we generate a static registry to serve
+containers that are built in separate repositories across an organization. If
+you are looking for a single static registry to build and deploy containers,
+see the original [singularityhub/registry](https://www.github.com/singularityhub/registry) 
+repository. See the central documentation for 
+[all static registries here](https://www.github.com/singularityhub/registry/wiki)
 
 # Why do we need a static registry?
 
@@ -18,22 +24,19 @@ Google Storage, etc. This would make all kinds of build and deploy pipelines pos
 sort of like a "Choose your own adventure" for registries. For example:
 
  1. Maintain registry API statically on Github pages
- 2. Build, check, update containers with Github Actions, TravisCI, CircleCI, or other continuous integration service
- 3. On successful CI (tests pass hooray!) update record in registry (static content) and push to storage.
-
+ 2. Build, check, update containers with Github Actions, TravisCI, CircleCI, or other continuous integration service *from other individual repos*
+ 3. On successful CI (tests pass hooray!) the other repositories open a pull request here to update the registry (static content).
+ 4. The registry tests the contribution, meaning existence of the image.
 
 # Getting Started
 
 Following the links below to read the documentation on the repository wiki to learn more.
 
  - [Documentation](https://github.com/singularityhub/registry/wiki) home on the respository wiki.
- - [Deploy!](https://github.com/singularityhub/registry/wiki/deploy-registry) your own container storage.
- - [Example API Interaction](https://github.com/singularityhub/registry/wiki/Example-API-Interaction)
- - [Technical Specification](https://github.com/singularityhub/registry/wiki/Technical-Specification) or specifically, the logic behind the files and folder organization here.
 
 ## Support
 
-Please [open an issue](https://www.github.com/singularityhub/registry/) if you
+Please [open an issue](https://www.github.com/singularityhub/registry-org/) if you
 have any questions, preguntas, dilemas, asuntos... 
 
 ## License
