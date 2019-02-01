@@ -1,10 +1,10 @@
 ---
 layout: manifests/singularity
 size: 71724
-digest: sha256:7c465a806c352110baded18546c93ab4a6cca2f88b2ce050baa9091ae94c3d5a
+digest: sha256:aee540bfb33168ac6f828ec7254b43b44953c30a09f8ab0d4b4041b73817c787
 layers:
 - size: 71724
-  digest: "sha256:7c465a806c352110baded18546c93ab4a6cca2f88b2ce050baa9091ae94c3d5a"
-  url: "https://19-76497713-gh.circle-artifacts.com/0/singularity-containers/singularityhub/centos/7c465a806c352110baded18546c93ab4a6cca2f88b2ce050baa9091ae94c3d5a.sif"
+  digest: "sha256:aee540bfb33168ac6f828ec7254b43b44953c30a09f8ab0d4b4041b73817c787"
+  url: "https://33-76497713-gh.circle-artifacts.com/0/singularity-containers/singularityhub/centos/aee540bfb33168ac6f828ec7254b43b44953c30a09f8ab0d4b4041b73817c787.sif"
 ---
 
