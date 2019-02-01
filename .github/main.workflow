@@ -7,7 +7,7 @@ action "Create New Pull Request" {
   uses = "vsoch/pull-request-action@master"
   secrets = [
     "GITHUB_TOKEN",
-    "GH_USER",
+    "GITHUB_ACTOR",
   ]  
   env = {
     BRANCH_PREFIX = "update/"
