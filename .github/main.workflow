@@ -6,8 +6,7 @@ workflow "Create Pull Requests" {
 action "Create New Pull Request" {
   uses = "vsoch/pull-request-action@master"
   secrets = [
-    "GITHUB_TOKEN",
-    "GITHUB_ACTOR",
+    "GITHUB_TOKEN"
   ]  
   env = {
     BRANCH_PREFIX = "update/"
