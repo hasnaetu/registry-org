@@ -47,4 +47,4 @@ have any questions, preguntas, dilemas, asuntos...
 ## License
 
 This code is licensed under the Affero GPL, version 3.0 or later [LICENSE](LICENSE). 
-The power of open source compels you!
+The power of open source compels you!!
