@@ -1,4 +1,6 @@
 ---
 layout: collection
-description: you can change this description in the README.md of the collection folder
+description: This container is an example build using CircleCI and Google Cloud Storage
 ---
+
+See [singularityhub/busybox](https://www.github.com/singularityhub/busybox) to use this template.
