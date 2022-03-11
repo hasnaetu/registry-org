@@ -1,180 +1,26 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
-version: 2
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  build:
-    machine: true
-    working_directory: ~/repo
+  say-hello:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v5-dependencies
-
       - run:
-          name: install dependencies
-          command: | 
-            ls $HOME
-            if [ ! -d "/home/circleci/conda" ]; then
-                wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-                /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/conda
-                export PATH=$HOME/conda/bin:$PATH
-                $HOME/conda/bin/pip install sregistry[all]
-            else
-                echo "Miniconda is already installed, continuing to build."
-            fi
-            chmod u+x ~/repo/.circleci/*.sh
-            /bin/bash ~/repo/.circleci/setup.sh
+          name: "Say hello"
+          command: "echo Hello, World!"
 
-      - save_cache:
-          paths:
-            - /home/circleci/conda
-          key: v5-dependencies
-        
-      - run:
-          name: Build Containers
-          command: |
-            cd ~/repo
-            mkdir -p build
-            # The repository ID is in the inspect / metadata
-            # <meta name="octolytics-dimension-repository_id" content="167740989" />
-            # repo_id=167740989
-            repo_id=$(curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} | jq --raw-output '.id')
-            echo "Repo ID is ${repo_id}"
-            build_number=$((CIRCLE_BUILD_NUM+1))
-            artifacts="https://${build_number}-${repo_id}-gh.circle-artifacts.com"
-            # Find all singularity recipes
-            for recipe in $(find $PWD -name "Singularity*")
-                do  
-                    container_dir=$(dirname ${recipe}.sif)
-
-                    # Only build the container if we don't have a README.md for it                    
-                    if [ -f "$container_dir/README.md" ]; then
-                        echo "$container_dir/README.md found, $recipe not marked for build."
-                        continue
-                    fi
-
-                    echo "Found changed recipe $recipe"
-                    # If the user provided a build script, run it instead
-                    if [ -f "${container_dir}/build.sh" ]; then
-                        echo "Found ${container_dir}/build.sh"
-                        chmod u+x ${container_dir}/build.sh
-                        /bin/bash ${container_dir}/build.sh $recipe
-                    else
-                        /bin/bash ~/repo/.circleci/build.sh $recipe
-                    fi
-                    # Rename image based on shasum
-                    container_name=`sha256sum ${recipe}.sif | awk '{ print $1 }'`
-                    collection_dir=$(dirname $container_dir)
-                    collection_dir=$(dirname $collection_dir)
-                    container_tag=$(basename $container_dir)
-                    mv ${recipe}.sif ${container_dir}/${container_name}.sif
-                    # Create artifact storage that mirrors registry organization
-                    outdir="${container_dir/${HOME}\/repo/}" # vanessa/greeting/
-                    outdir="${outdir/manifests\//}"          # vanessa/greeting/latest
-                    mkdir -p build/$outdir
-
-                    echo
-                    echo "Successfully built ${recipe}"
-                    echo "   saving to -> build$outdir"
-                    echo "   sha256sum -> $container_name"
-                    echo "   tag       -> $container_tag"
- 
-                    container_size=`du -k "${container_dir}/${container_name}.sif" | cut -f1`
-                    mv "${container_dir}/${container_name}.sif" build/$outdir
-                    echo "   size       -> $container_size"
-
-                    digest=${container_name}
-                    url=${artifacts}/$CIRCLE_NODE_INDEX/singularity-containers$outdir/${container_name}.sif
-                    # Create the README.md with the MANIFEST template
-                    export url digest container_size
-                    envsubst < ~/repo/.circleci/MANIFEST_TEMPLATE.md > $container_dir/README.md
-                    # Add README for container to git (will render into container page)
-                    echo $container_dir/README.md >> .gitadds
-                    ls $container_dir
-                    cat $container_dir/README.md
-                    # Create the collections README, if it doesn't exist
-                    if [ ! -f "$collection_dir/README.md" ]; then
-                        echo "Creating $collection_dir/README.md"
-                        cp ~/repo/.circleci/COLLECTION_TEMPLATE.md $collection_dir/README.md
-                        # Add README for tags to git (will render into tags endpoint)
-                        echo $collection_dir/README.md >> .gitadds
-                    fi
-                    # Create the tags folder, if doesn't exist
-                    if [ ! -f "$collection_dir/tags/README.md" ]; then
-                        echo "Creating $collection_dir for tags"
-                        mkdir -p $collection_dir/tags
-                        cp ~/repo/.circleci/TAGS_TEMPLATE.md $collection_dir/tags/README.md
-                        # Add README for tags to git (will render into tags endpoint)
-                        echo $collection_dir/tags/README.md >> .gitadds
-                    fi
-
-                done
-
-              # build the container!
-              # You can add any other sregistry push commands for storage, and specify a client
-              # (and make sure your define the encrypted environment credentials in circle ci
-              # to push to your storage locations of choice
-
-              # Examples with upload to storage clients defined by sregistry
-              # https://singularityhub.github.io/sregistry-cli/clients
-              # Environment variables must be defined in CI encrypted secrets/settings
-              # https://circleci.com/docs/2.0/env-vars/
-              #- /bin/bash build.sh --uri collection/container --cli google-storage Singularity
-              #- /bin/bash build.sh --uri collection/container --cli google-drive Singularity
-              #- /bin/bash build.sh --uri collection/container --cli globus Singularity
-              #- /bin/bash build.sh --uri collection/container --cli registry Singularity
-
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - repo
-
-
-  deploy:
-    machine: true
-    working_directory: ~/repo
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Update if branch is not master
-          command: |
-             echo "Detected push to master, updating GitHub pages!"    
-             git config user.name "${CIRCLE_USERNAME}"
-             git config user.email "${CIRCLE_USERNAME}@users.noreply.github.com"
-             git checkout master
-             git pull origin master
-             for file in $(cat .gitadds); do
-                 git add $file
-             done
-             git commit -m 'Automated deployment to Github Pages' --allow-empty
-             git push origin master
-
-      - store_artifacts:
-          path: ~/repo/build
-          destination: singularity-containers
-
-
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  version: 2
-  build_deploy:
+  say-hello-workflow:
     jobs:
-      - build:
-          filters:
-            branches:
-              ignore: master
-      - hold:
-          type: approval
-          requires: 
-            - build
-      - deploy:
-          requires: 
-            - hold
-          filters:
-            branches:
-              ignore: master
+      - say-hello
