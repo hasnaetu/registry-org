@@ -3,12 +3,12 @@ title:        Static Organization Registry
 
 # Urls
 baseurl:      "/registry-org"
-repository:   "singularityhub/registry-org"
-repo:         "https://www.github.com/singularityhub/registry-org"
+repository:   "hasnaetu/registry-org"
+repo:         "https://www.github.com/hasnaetu/registry-org"
 
 # People and Social
-maintainer: "@vsoch"
-twitter: vsoch
+maintainer: "@hasnaetu"
+twitter: hasnaetu
 
 # Registry Metadata
 keywords: "singularity, containers"
